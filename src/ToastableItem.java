@@ -14,5 +14,5 @@ public abstract class ToastableItem {
 		System.out.println(s + ": isToasted: " + isToasted + ", isToasting:" + isToasting + ", toastedAmount:" + toastedAmount);
 	}
 	
-	public abstract double getToastedAmountFromIntensity(int intensity);
+	public abstract double getToastedAmountFromIntensity(double intensity);
 }

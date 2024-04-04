@@ -13,9 +13,14 @@ public class SlicedBread extends ToastableItem{
 	}
 
 	@Override
-	public double getToastedAmountFromIntensity(int intensity) {
+	public double getToastedAmountFromIntensity(double intensity) {
 		// TODO Auto-generated method stub
-		return (intensity-minToasting)/(maxToasting-minToasting);
+		return (intensity-minToasting)/(maxToasting-minToasting)*100;
+	}
+	
+	@Override
+	public String toString() {
+		return "isToasting: " + this.isToasting +  ", isToasted: " + this.isToasted +  ", toastedAmount: " + this.toastedAmount + "%";
 	}
 
 }

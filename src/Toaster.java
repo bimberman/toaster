@@ -1,42 +1,42 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
 
 public class Toaster {
 	ArrayList<ToastableItem> items = null;
 	boolean isPoweredOn = false;
 	ToasterSlot[] slots = null;
 	int DEFAULT_NUMBER_OF_SLOTS = 2;
-	
+	String toasterId = ""; 
 	HashMap<Integer, Integer[]> slotsGroupingMap = new HashMap<Integer, Integer[]>();
 	HashMap<Integer, Integer> slotsToItemsMap = new HashMap<Integer, Integer>();
 	
-	public Toaster(int numOfSlots) {
+	public Toaster(String id, int numOfSlots) {
+		this.toasterId = id;
 		this.slots = new ToasterSlot[numOfSlots];
 		this.items = new ArrayList<ToastableItem>();
 		
 		for(int i=0;i<this.slots.length; i++){
-		   this.slots[i] =  new ToasterSlot();
+		   this.slots[i] =  new ToasterSlot(id + "slot"+i);
 		}
 	}
 
-	public Toaster(int numOfSlots, int maxHeat) {
+	public Toaster(String id, int numOfSlots, int maxHeat) {
+		this.toasterId = id;
 		this.slots = new ToasterSlot[numOfSlots];
 		this.items = new ArrayList<ToastableItem>();
 		
 		for(int i=0;i<this.slots.length; i++){
-		   this.slots[i] =  new ToasterSlot(maxHeat);
+		   this.slots[i] =  new ToasterSlot(id + "slot"+i, maxHeat);
 		}
 	}
 	
-	public Toaster(int numOfSlots, int maxHeat, int minHeat) {
+	public Toaster(String id, int numOfSlots, int maxHeat, int minHeat) {
+		this.toasterId = id;
 		this.slots = new ToasterSlot[numOfSlots];
 		this.items = new ArrayList<ToastableItem>();
 		
 		for(int i=0;i<this.slots.length; i++){
-		   this.slots[i] =  new ToasterSlot(maxHeat, minHeat);
+		   this.slots[i] =  new ToasterSlot(id + "slot"+i, maxHeat, minHeat);
 		}
 	}
 	
@@ -46,18 +46,18 @@ public class Toaster {
 		return groupId;
 	}
 	
-	public void insertItem(Integer slotIndex, ToastableItem item) {
+	public void insertItem(int slotIndex, ToastableItem item) {
 		items.add(item);
-		slotsToItemsMap.put(slotIndex, items.size());
+		slotsToItemsMap.put(Integer.valueOf(slotIndex), items.size()-1);
 	}
 	
-	public void insertItems(Integer[] slotIndecies, ToastableItem[] items) {
+	public void insertItems(int[] slotIndecies, ToastableItem[] items) {
 		for(int i=0;i<slotIndecies.length;i++) {
 			insertItem(slotIndecies[i], items[i]);
 		}
 	}
 	
-	public void startToasting(int index, int time) {
+	public void startToasting(int index, int time, int currentHeat) {
 		if(this.slots[index]==null) {
 			throw new RuntimeException("There is no slot at this index");
 		}
@@ -65,6 +65,7 @@ public class Toaster {
 		ToasterSlot slot = this.slots[index];
 		slot.setIsEnggaged(true);
 		slot.setTime(time);
+		slot.setCurrentHeat(currentHeat);
 		
 		Integer itemIndex = slotsToItemsMap.get(index);
 		ToastableItem item = this.items.get(itemIndex);
@@ -78,27 +79,27 @@ public class Toaster {
 		if(this.slots[index]==null) {
 			throw new RuntimeException("There is no slot at this index");
 		}
-
 		ToasterSlot slot = this.slots[index];
-		slot.setIsEnggaged(false);
-		slot.setTime(0);
-		
 		Integer itemIndex = slotsToItemsMap.get(index);
 		ToastableItem item = this.items.get(itemIndex);
+		
 		if(item!=null) {
 			item.isToasting = false;
 			item.isToasted = true;
 			item.toastedAmount = item.getToastedAmountFromIntensity(slot.getIntensity());
 		}
+		
+		slot.setIsEnggaged(false);
+		slot.setTime(0);
 	}
 	
 
-	public void startToastingGroupedItems(int groupId, int time) {
+	public void startToastingGroupedItems(int groupId, int time, int currentHeat) {
 		// some king of timing function is needed here
 		Integer[] indecies = slotsGroupingMap.get(groupId);
 		System.out.println("Grouped, Toasting:");
 		for(int i=0;i<indecies.length;i++) {
-			startToasting(indecies[i].intValue(), time);
+			startToasting(indecies[i].intValue(), time, currentHeat);
 		}
 	}
 	

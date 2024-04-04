@@ -1,47 +1,54 @@
+import java.util.ArrayList;
 
 public class ToasterSlot {
-	Heater[] heaters = null;
+	ArrayList<Heater> heaters = new ArrayList<Heater>();
 	boolean isEngaged = false;
 	int time = 0;
 	int DEFAULT_NUMBER_OF_HEATERS = 1;
+	String slotId = "";
 	
-	public ToasterSlot() {
-		this.heaters = new Heater[DEFAULT_NUMBER_OF_HEATERS];
+	public ToasterSlot(String id) {
+		this.slotId = id;
 		
-		for(Heater h: this.heaters) {
-			h = new Heater();
+		for(int i=0;i<DEFAULT_NUMBER_OF_HEATERS;i++) {
+			heaters.add(new Heater());
 		}
 	}
 	
-	public ToasterSlot(int numOfHeaters) {
-		this.heaters = new Heater[numOfHeaters];
+	public ToasterSlot(String id, int numOfHeaters) {		
+		this.slotId = id;
 		
-		for(Heater h: this.heaters) {
-			h = new Heater();
+		for(int i=0;i<numOfHeaters;i++) {
+			heaters.add(new Heater());
 		}
 	}
 	
-	public ToasterSlot(int numOfHeaters, int maxHeat) {
-		this.heaters = new Heater[numOfHeaters];
+	public ToasterSlot(String id, int numOfHeaters, int maxHeat) {
+		this.slotId = id;
 		
-		for(Heater h: this.heaters) {
-			h = new Heater(maxHeat);
+		for(int i=0;i<numOfHeaters;i++) {
+			heaters.add(new Heater(maxHeat));
 		}
 	}
 	
-	public ToasterSlot(int numOfHeaters, int maxHeat, int minHeat) {
-		this.heaters = new Heater[numOfHeaters];
+	public ToasterSlot(String id, int numOfHeaters, int maxHeat, int minHeat) {
+		this.slotId = id;
 		
-		for(Heater h: this.heaters) {
-			h = new Heater(maxHeat, minHeat);
+		for(int i=0;i<numOfHeaters;i++) {
+			heaters.add(new Heater(maxHeat, minHeat));
 		}
 	}
 	
-	public Heater[] getHeaters() {
+	public ArrayList<Heater> getHeaters() {
 		return this.heaters;
 	}
 	
 	public void setIsEnggaged(boolean isEngaged) {
+		if(isEngaged) {
+			System.out.println("Slot " + this.slotId + " is engaging");
+		} else {
+			System.out.println("Slot " + this.slotId + " is disengaging");
+		}
 		this.isEngaged = isEngaged;
 	}
 	
@@ -57,8 +64,14 @@ public class ToasterSlot {
 		return this.time;
 	}
 	
-	public int getIntensity() {
-		int intensity = 0;
+	public void setCurrentHeat(int currentHeat) {
+		for(Heater h: heaters) {
+			h.setCurrentHeat(currentHeat);
+		}
+	}
+	
+	public double getIntensity() {
+		double intensity = 0;
 		for(Heater h: this.heaters) {
 			intensity+=time*h.currentHeat;
 		}

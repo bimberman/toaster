@@ -5,13 +5,17 @@ public class SlicedBread extends ToastableItem{
 	int maxToasting = 10;
 	
 	SlicedBread() {
-		super(5, 5);
 		// TODO Auto-generated constructor stub
 	}
 	
 	SlicedBread(int width, int height) {
-		super(width, height);
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public double getToastedAmountFromIntensity(int intensity) {
+		// TODO Auto-generated method stub
+		return (intensity-minToasting)/(maxToasting-minToasting);
 	}
 
 }
